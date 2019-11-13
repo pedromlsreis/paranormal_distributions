@@ -32,7 +32,7 @@ my_path = r'C:\Users\pedro\OneDrive\Documents\MAA\Data_Mining\paranormal_distrib
 conn = sqlite3.connect(my_path)
 
 query = """
-    select
+    SELECT
 	e."Customer Identity",
 	"First Policy´s Year",
 	"Brithday Year",
@@ -47,10 +47,10 @@ query = """
 	l."Premiums in LOB: Health",
 	l."Premiums in LOB:  Life",
 	l."Premiums in LOB: Work Compensations"
-	from
-    Engage as e
-	join LOB as l on l."Customer Identity" = e."Customer Identity"
-    order by
+	FROM
+    Engage AS e
+	JOIN LOB AS l ON l."Customer Identity" = e."Customer Identity"
+    ORDER BY
 	e."Customer Identity";
 """
 
