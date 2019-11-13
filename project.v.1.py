@@ -6,15 +6,14 @@ Created on Wed Nov 13 07:09:18 2019
 @author: kalrashid
 """
 
+# importing all the libraries
 import sqlite3
 import os
 import pandas as pd
 import numpy as np
-import seaborn as sb
-import matplotlib
-from matplotlib import pyplot as plt
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-import pandas_profiling
 
 #setting display
 pd.set_option('display.width', 4000)
