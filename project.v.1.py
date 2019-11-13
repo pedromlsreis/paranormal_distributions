@@ -73,6 +73,7 @@ df.set_index('ID', inplace = True, drop = True)
 df.describe()
 
 #data preprocessing
-df.loc[df["Birthday"]==1028, "Birthday"] = np.nan  # turning impossible value into NaN
+df.loc[df["Birthday"] < 1900, "Birthday"] = np.nan  # turning impossible values into NaN
+df.loc[df["First_Policy"] > 2020, "First_Policy"] = np.nan
 df["Education"] = df["Education"].str.extract(r"(\d)").astype(np.float)  # turning Education into numeric
 dups_df = df[df.duplicated(keep="first")].copy() # duplicated rows (showing only the duplicates)
