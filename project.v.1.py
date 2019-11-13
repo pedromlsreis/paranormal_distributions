@@ -25,12 +25,11 @@ pd.set_option('display.float_format', '{:.2f}'.format)
 
 # source: https://docs.python.org/3/library/sqlite3.html
 
-my_path = '/home/kalrashid/Dropbox/nova/data_mining/project/data/insurance.db'
+# my_path = '/home/kalrashid/Dropbox/nova/data_mining/project/data/insurance.db'
+my_path = r'C:\Users\pedro\OneDrive\Documents\MAA\Data_Mining\paranormal_distributions\data\insurance.db'
 
 # connect to the database
 conn = sqlite3.connect(my_path)
-#conn = sqlite3.connect(dbname)
-
 
 query = """
     select
@@ -57,6 +56,8 @@ query = """
 
 data_df = pd.read_sql_query(query, conn)
 
+df = data_df.copy()  # let's keep a copy of the original data
+
 #remaining column names to manageable variable names
 
 column_names = ['ID', 'First_Policy', 'Birthday', 'Education', 'Salary', 'Area', 'Children', 'CMV',
@@ -64,13 +65,13 @@ column_names = ['ID', 'First_Policy', 'Birthday', 'Education', 'Salary', 'Area',
 
 
 #renaming the columns
-data_df.columns = column_names
+df.columns = column_names
 
 #seting 'ID' as index
-data_df.set_index('ID', inplace = True, drop = True)
+df.set_index('ID', inplace = True, drop = True)
 
 #exploring the data
-data_df.describe()
+df.describe()
 
 
 
