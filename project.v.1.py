@@ -14,6 +14,7 @@ import seaborn as sb
 import matplotlib
 from matplotlib import pyplot as plt
 
+import pandas_profiling
 
 #setting display
 pd.set_option('display.width', 4000)
@@ -55,22 +56,20 @@ query = """
 	e."Customer Identity";
 """
 
-df = pd.read_sql_query(query, conn)
+data_df = pd.read_sql_query(query, conn)
 
-df1 = df.head()
+#remaining column names to manageable variable names
 
-# connect to the database
-#conn = sqlite3.connect(my_path)
-#conn = sqlite3.connect(dbname)
-
-# the query
-#query = """
-#    select
-#	*;
-#"""
+column_names = ['ID', 'First_Policy', 'Birthday', 'Education', 'Salary', 'Area', 'Children', 'CMV',
+                'Claims', 'Motor', 'Household', 'Health', 'Life', 'Work_Compensation']
 
 
-# Transform INcome
+#exploring the data
+data_df.describe()
+
+
+
+
 
 
 
