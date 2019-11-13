@@ -43,7 +43,6 @@ query = """
 	"Has Children (Y=1)",
 	"Customer Monetary Value",
 	"Claims Rate",
-    l."Customer Identity",
     l."Premiums in LOB: Motor",
 	l."Premiums in LOB: Household",
 	l."Premiums in LOB: Health",
@@ -63,6 +62,12 @@ data_df = pd.read_sql_query(query, conn)
 column_names = ['ID', 'First_Policy', 'Birthday', 'Education', 'Salary', 'Area', 'Children', 'CMV',
                 'Claims', 'Motor', 'Household', 'Health', 'Life', 'Work_Compensation']
 
+
+#renaming the columns
+data_df.columns = column_names
+
+#seting 'ID' as index
+data_df.set_index('ID', inplace = True, drop = True)
 
 #exploring the data
 data_df.describe()
