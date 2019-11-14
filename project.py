@@ -14,6 +14,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas_profiling
+from utils.preprocessing import preprocessing_dataframe
 
 
 #setting display
@@ -76,7 +77,4 @@ profile = df.profile_report(style={'full_width':True}, title='Pandas Profiling R
 profile.to_file(output_file="df_profiling.html")
 
 #data preprocessing
-df.loc[df["Birthday"] < 1900, "Birthday"] = np.nan  # turning impossible values into NaN
-df.loc[df["First_Policy"] > 2020, "First_Policy"] = np.nan
-df["Education"] = df["Education"].str.extract(r"(\d)").astype(np.float)  # turning Education into numeric
-dups_df = df[df.duplicated(keep="first")].copy() # duplicated rows (showing only the duplicates)
+df, dups_df = preprocessing_dataframe(df)
