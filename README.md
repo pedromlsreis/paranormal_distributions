@@ -1,10 +1,18 @@
 # Paranormal Distributions
 
-Group Project for the Data Mining course of the MSc. in Data Science and Advanced Analytics @ NOVA IMS.
+Group Project for the Data Mining course of the MSc. in Data Science and Advanced Analytics @ NOVA IMS (2019-2020).
 
 
-## Group N
+## Table of Contents
 
-The group is composed by:
+
+## Installation
+
+
+## Usage
+
+
+## Credits
+Group N, composed by:
 - Kauser Al Rashid (M20190543)
 - Pedro Reis (M20180428)
