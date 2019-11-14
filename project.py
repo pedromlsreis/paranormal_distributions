@@ -13,6 +13,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import pandas_profiling
 
 
 #setting display
@@ -71,6 +72,8 @@ df.set_index('ID', inplace = True, drop = True)
 
 #exploring the data
 df.describe()
+profile = df.profile_report(style={'full_width':True}, title='Pandas Profiling Report')
+profile.to_file(output_file="df_profiling.html")
 
 #data preprocessing
 df.loc[df["Birthday"] < 1900, "Birthday"] = np.nan  # turning impossible values into NaN
