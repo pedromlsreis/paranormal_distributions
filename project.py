@@ -26,8 +26,8 @@ pd.set_option('display.float_format', '{:.2f}'.format)
 
 # source: https://docs.python.org/3/library/sqlite3.html
 
-# my_path = '/home/kalrashid/Dropbox/nova/data_mining/project/data/insurance.db'
-my_path = r'C:\Users\pedro\OneDrive\Documents\MAA\Data_Mining\paranormal_distributions\data\insurance.db'
+my_path = '/home/kalrashid/Dropbox/nova/data_mining/project/data/insurance.db'
+#my_path = r'C:\Users\pedro\OneDrive\Documents\MAA\Data_Mining\paranormal_distributions\data\insurance.db'
 
 # connect to the database
 conn = sqlite3.connect(my_path)
@@ -78,3 +78,8 @@ profile.to_file(output_file="df_profiling.html")
 
 #data preprocessing
 df, dups_df = preprocessing_dataframe(df)
+#adding dummy variables
+df = creating_dummies(df, cols = ['Area', 'Education'])
+
+
+
