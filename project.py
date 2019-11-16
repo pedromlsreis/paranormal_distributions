@@ -13,7 +13,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas_profiling
-from utils.preprocessing import preprocessing_dataframe, creating_dummies
+from utils.preprocessing import preprocessing_dataframe, adding_dummies, outliers_
 from utils.data_extraction import data_extract
 
 
@@ -39,7 +39,11 @@ profile.to_file(output_file="df_profiling.html")
 # data preprocessing
 df, dups_df = preprocessing_dataframe(df)
 #adding dummy variables
-df = creating_dummies(df, cols = ['Area', 'Education'])
+df = adding_dummies(df, cols = ['Area', 'Education'])
+
+#removing outliers
+#testing to remove outliers using z score. But some of the results are fucking waaaaaack!
+temp = outliers_(df['Work_Compensation'])
 
 
-
+print(temp)

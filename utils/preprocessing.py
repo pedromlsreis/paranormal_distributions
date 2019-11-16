@@ -14,13 +14,23 @@ def cleaning_dataframe(df):
 
 
 #Creating Dummy variables for Area and Education
-def creating_dummies(df, cols):
-    Dummy_Vars = pd.get_dummies(df, columns = cols, drop_first=True)
-    df = pd.concat([df, Dummy_Vars], axis=1)
-    return df
+def adding_dummies(df, cols):
+    df_with_dummies = pd.get_dummies(df, columns = cols, drop_first=True)
+    return df_with_dummies
 
 #Dealing with Missing Values
+
+
 #Dealing with Outliers
+
+def outliers_(ys, threshold = 3):
+    print(ys.dtypes)
+    mean_y = np.mean(ys)
+    stdev_y = np.std(ys)
+    z_scores = [(y - mean_y) / stdev_y for y in ys]
+    return np.where(np.abs(z_scores) > threshold)
+
+
 #Data transformation
     
 
