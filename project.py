@@ -13,8 +13,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas_profiling
-from utils.preprocessing import preprocessing_dataframe
-from utils.data_extraction import data_extract
+from utils.preprocessing import preprocessing_dataframe, data_extract, creating_dummies, 
 
 
 # setting display options
@@ -38,6 +37,7 @@ profile.to_file(output_file="df_profiling.html")
 
 # data preprocessing
 df, dups_df = preprocessing_dataframe(df)
+
 #adding dummy variables
 df = creating_dummies(df, cols = ['Area', 'Education'])
 
