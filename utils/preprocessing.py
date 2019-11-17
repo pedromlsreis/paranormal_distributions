@@ -15,7 +15,7 @@ def cleaning_dataframe(df):
 
 #Creating Dummy variables for Area and Education
 def adding_dummies(df, cols):
-    df_with_dummies = pd.get_dummies(df, columns = cols, drop_first=False)
+    df_with_dummies = pd.get_dummies(df, columns = cols, drop_first=True)
     return df_with_dummies
 
 #Dealing with Missing Values
