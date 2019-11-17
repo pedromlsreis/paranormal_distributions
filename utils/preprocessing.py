@@ -62,7 +62,7 @@ def find_anomalies(ys, threshold = 3):
 #second way, but it needs a dataframe with columns that are numeric and have outliers
 
 def fancy_anomalies(df):
-    df = df[~(np.abs(df-df.mean()) > (3*df.std()))].dropna()
+    df = df[~(np.abs(df-df.mean()) > (3*df.std()))]
     return df
 
 
