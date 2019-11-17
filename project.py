@@ -13,7 +13,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas_profiling
-from utils.preprocessing import preprocessing_dataframe, adding_dummies, outliers_
+from utils.preprocessing import preprocessing_dataframe, adding_dummies, find_anomalies
 from utils.data_extraction import data_extract
 
 
@@ -33,8 +33,8 @@ my_path = '/home/kalrashid/Dropbox/nova/data_mining/project/data/insurance.db'
 original_df, df = data_extract(my_path)
 
 #exploring the data
-profile = df.profile_report(style={'full_width':True}, title='Pandas Profiling Report')
-profile.to_file(output_file="df_profiling.html")
+#profile = df.profile_report(style={'full_width':True}, title='Pandas Profiling Report')
+#profile.to_file(output_file="df_profiling.html")
 
 # data preprocessing
 df, dups_df = preprocessing_dataframe(df)
@@ -43,7 +43,11 @@ df = adding_dummies(df, cols = ['Area', 'Education'])
 
 #removing outliers
 #testing to remove outliers using z score. But some of the results are fucking waaaaaack!
-temp = outliers_(df['Work_Compensation'])
+
+t = find_anomalies(df['Work_Compensation'])
+
+
+temp = df.loc[~df['Work_Compensation'].isin(t)]
 
 
 print(temp)

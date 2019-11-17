@@ -2,6 +2,26 @@
 import numpy as np
 import pandas as pd
 
+"""
+Steps to follow, according to the lectures:
+Data preparation
+ Exploratory data analysis
+ Detecting outliers
+ Dealing with missing values
+ Data discretization
+ Imbalanced learning and data generation
+
+Data preprocessing
+ The curse of dimensionality
+ Identifying informative attributes/features
+ Creating attributes/features
+ Dimensionality reduction
+  Relevancy
+  Redundancy
+ Data standardization
+
+
+"""
 
 
 
@@ -21,14 +41,22 @@ def adding_dummies(df, cols):
 #Dealing with Missing Values
 
 
+
+
 #Dealing with Outliers
 
-def outliers_(ys, threshold = 3):
-    print(ys.dtypes)
-    mean_y = np.mean(ys)
-    stdev_y = np.std(ys)
-    z_scores = [(y - mean_y) / stdev_y for y in ys]
-    return np.where(np.abs(z_scores) > threshold)
+#not sure too much about this.
+def find_anomalies(ys, threshold = 3):
+    ys_std = np.std(ys)
+    ys_mean = np.mean(ys)
+    anomaly_cut_off = ys_std * threshold
+    
+    lower_limit = ys_mean - anomaly_cut_off 
+    upper_limit = ys_mean + anomaly_cut_off
+    
+    anomalies = [a for a in ys if a > upper_limit or a < lower_limit]
+
+    return anomalies
 
 
 #Data transformation
