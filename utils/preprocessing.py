@@ -1,6 +1,7 @@
 # Data preprocessing functions
 import numpy as np
 import pandas as pd
+from scipy import stats
 
 """
 Steps to follow, according to the lectures:
@@ -57,6 +58,12 @@ def find_anomalies(ys, threshold = 3):
     anomalies = [a for a in ys if a > upper_limit or a < lower_limit]
 
     return anomalies
+
+#second way, but it needs a dataframe with columns that are numeric and have outliers
+
+def fancy_anomalies(df):
+    df = df[~(np.abs(df-df.mean()) > (3*df.std()))].dropna()
+    return df
 
 
 #Data transformation
