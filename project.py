@@ -13,7 +13,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas_profiling
-from utils.preprocessing import preprocessing_dataframe, adding_dummies, find_anomalies, fancy_anomalies
+from utils.preprocessing import preprocessing_dataframe, adding_dummies, find_anomalies, fancy_anomalies, remove_outlier
 from utils.data_extraction import data_extract
 
 
@@ -44,9 +44,13 @@ df = adding_dummies(df, cols = ['Area', 'Education'])
 #removing outliers
 #testing to remove outliers using z score. But some of the results are fucking waaaaaack!
 
+#columns of which outliers need to be identified
+col_names = ['Motor','Household','Health','Life','Work_Compensation']
 
-t2 = fancy_anomalies(df[['Life', 'Work_Compensation']])
+
+df_1 = df.copy()
+df_1.loc[col_names] = remove_outlier(df, col_names)
 
 
-
-print(t2)
+print(df.head())
+print(df_1.head())

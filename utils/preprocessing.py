@@ -43,31 +43,22 @@ def adding_dummies(df, cols):
 
 
 
-
 #Dealing with Outliers
 
-#not sure too much about this.
-def find_anomalies(ys, threshold = 3):
-    ys_std = np.std(ys)
-    ys_mean = np.mean(ys)
-    anomaly_cut_off = ys_std * threshold
-    
-    lower_limit = ys_mean - anomaly_cut_off 
-    upper_limit = ys_mean + anomaly_cut_off
-    
-    anomalies = [a for a in ys if a > upper_limit or a < lower_limit]
 
-    return anomalies
-
-#second way, but it needs a dataframe with columns that are numeric and have outliers
+#another way, but it needs a dataframe with columns that are numeric and have outliers
 
 def fancy_anomalies(df):
     df = df[~(np.abs(df-df.mean()) > (3*df.std()))]
     return df
 
 
+def remove_outlier(df, col_name):
+    temp_df = df[col_name]
+    df = temp_df[~(np.abs(temp_df-temp_df.mean()) > (3*temp_df.std()))]
+    return df
+
 #Data transformation
-    
 
 def preprocessing_dataframe(df):
     df = cleaning_dataframe(df)
