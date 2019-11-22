@@ -1,4 +1,6 @@
-
+import pandas as pd
+import numpy as np
+from scipy import stats
 
 """
 Steps to follow, according to the lectures:
@@ -18,10 +20,7 @@ Data preprocessing
   Redundancy
  Data standardization
 
-
 """
-
-
 
 #Cleaning the data
 def cleaning_dataframe(df):
@@ -33,8 +32,9 @@ def cleaning_dataframe(df):
 
 #Creating Dummy variables for Area and Education
 def adding_dummies(df, cols):
-    df_with_dummies = pd.get_dummies(df, columns = cols, drop_first=True)
+    df_with_dummies = pd.get_dummies(df, columns=cols, drop_first=True)
     return df_with_dummies
+
 
 #Dealing with Missing Values
 
@@ -46,13 +46,13 @@ def adding_dummies(df, cols):
 #another way, but it needs a dataframe with columns that are numeric and have outliers
 
 def fancy_anomalies(df):
-    df = df[~(np.abs(df-df.mean()) > (3*df.std()))]
+    df = df[~(np.abs(df - df.mean()) > (3 * df.std()))]
     return df
+    
 
-
-def remove_outlier(df, col_name):
-    temp_df = df[col_name]
-    df = temp_df[~(np.abs(temp_df-temp_df.mean()) > (3*temp_df.std()))]
+def remove_outlier(df, col):
+    temp_df = df[col].copy()
+    df = temp_df[~(np.abs(temp_df - temp_df.mean()) > (3 * temp_df.std()))]
     return df
 
 #Data transformation

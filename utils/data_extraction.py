@@ -1,3 +1,5 @@
+import sqlite3
+import pandas as pd
 
 def data_extract(path_to_db):
     # connect to the database
