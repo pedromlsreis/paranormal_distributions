@@ -12,7 +12,13 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import pandas_profiling
+from pip._internal import main as pipmain
+
+try:
+    import pandas_profiling
+except:
+    pipmain(['install', 'pandas_profiling'])
+    import pandas_profiling
 
 from utils.data_extraction import data_extract
 from utils.preprocessing import preprocessing_dataframe, adding_dummies, fancy_anomalies, remove_outlier
