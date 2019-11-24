@@ -43,7 +43,7 @@ def run(path = str, profile = bool):
     #exploring the data
     if profile:
         profile = df.profile_report(style={'full_width':True}, title='Pandas Profiling Report')
-        profile.to_file(output_file="df_profiling.html")
+        profile.to_file(output_file="./out/df_profiling.html")
 
     # data preprocessing
     df, dups_df = preprocessing_dataframe(df)
