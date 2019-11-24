@@ -54,7 +54,7 @@ def run(path = str, profile = bool):
     #testing to remove outliers using z score. But some of the results are fucking waaaaaack!
     (df, outliers_count) = remove_outliers(df, cols=['Motor','Household','Health','Life','Work_Compensation'])
 
-    print(f"outlier_count:\n{outlier_count}\n")
+    print(f"outlier_count:\n{outliers_count}\n")
     print(df.head(2))
 
 
