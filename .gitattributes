@@ -1,2 +1,2 @@
-out/* linguist-vendored
-*.html linguist-vendored=false
+out/* linguist-detectable=false
+# *.html linguist-vendored=false
