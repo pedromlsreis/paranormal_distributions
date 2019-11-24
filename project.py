@@ -33,8 +33,7 @@ pd.set_option('display.float_format', '{:.2f}'.format)
 
 # source: https://docs.python.org/3/library/sqlite3.html
 
-# my_path = '/home/kalrashid/Dropbox/nova/data_mining/project/data/insurance.db'
-my_path = r'C:\Users\pedro\OneDrive\Documents\MAA\Data_Mining\paranormal_distributions\data\insurance.db'
+my_path = r'.\data\insurance.db'
 
 def run(path = str, profile = bool):
     # data extraction
