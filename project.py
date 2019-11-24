@@ -21,7 +21,7 @@ except:
     import pandas_profiling
 
 from utils.data_extraction import data_extract
-from utils.preprocessing import preprocessing_dataframe, adding_dummies, fancy_anomalies, remove_outlier
+from utils.preprocessing import preprocessing_dataframe, adding_dummies, remove_outlier
 
 
 # setting display options
@@ -41,25 +41,21 @@ def run(path = str, profile = bool):
 
     #exploring the data
     if profile:
-        profile = df.profile_report(style={'full_width':True}, title='Pandas Profiling Report')
-        profile.to_file(output_file="./out/df_profiling.html")
+        prof = df.profile_report(style={'full_width':True}, title='Pandas Profiling Report')
+        prof.to_file(output_file="./out/df_profiling.html")
 
     # data preprocessing
-    df, dups_df = preprocessing_dataframe(df)
-    #adding dummy variables
+    (df, dups_df) = preprocessing_dataframe(df)
+
+    # adding dummy variables
     df = adding_dummies(df, cols = ['Area', 'Education'])
 
-    #removing outliers
+    # removing outliers
     #testing to remove outliers using z score. But some of the results are fucking waaaaaack!
+    (df, outlier_count) = remove_outlier(df, cols=['Motor','Household','Health','Life','Work_Compensation'])
 
-    #columns of which outliers need to be identified
-    col_names = ['Motor','Household','Health','Life','Work_Compensation']
-
-    df_1 = df.copy()
-    # df_1.loc[col_names] = remove_outlier(df, col_names)
-
+    print("outlier_count:\n",outlier_count, "\n")
     print(df.head(2))
-    # print(df_1.head(2))
 
 
 if __name__ == "__main__":

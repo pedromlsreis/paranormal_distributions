@@ -32,6 +32,7 @@ def cleaning_dataframe(df):
 
 #Creating Dummy variables for Area and Education
 def adding_dummies(df, cols):
+    """Adds dummy columns to selected variables using the One Hot Encoding method. Drops the first column."""
     df_with_dummies = pd.get_dummies(df, columns=cols, drop_first=True)
     return df_with_dummies
 
@@ -45,18 +46,16 @@ def adding_dummies(df, cols):
 
 #another way, but it needs a dataframe with columns that are numeric and have outliers
 
-def fancy_anomalies(df):
-    df = df[~(np.abs(df - df.mean()) > (3 * df.std()))]
-    return df
-    
+def remove_outlier(df, cols):
+    """Removes outliers and replace them by NaNs.
+    Selected columns must be numerical."""
+    outlier_count = ((df[cols] == df[~(np.abs(df - df.mean()) > (3 * df.std()))][cols]) == False)[cols].sum()
+    temp_df = df[cols].copy()
+    df = temp_df[~(np.abs(temp_df - temp_df.mean()) > (3 * temp_df.std()))].copy()
+    return df, outlier_count
 
-def remove_outlier(df, col):
-    temp_df = df[col].copy()
-    df = temp_df[~(np.abs(temp_df - temp_df.mean()) > (3 * temp_df.std()))]
-    return df
 
 #Data transformation
-
 def preprocessing_dataframe(df):
     df = cleaning_dataframe(df)
     dups_df = df[df.duplicated(keep="first")].copy() # duplicated rows (showing only the duplicates)
