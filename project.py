@@ -21,7 +21,7 @@ except:
     import pandas_profiling
 
 from utils.data_extraction import data_extract
-from utils.preprocessing import preprocessing_dataframe, adding_dummies, remove_outlier
+from utils.preprocessing import preprocessing_dataframe, adding_dummies, remove_outliers
 
 
 # setting display options
@@ -52,9 +52,9 @@ def run(path = str, profile = bool):
 
     # removing outliers
     #testing to remove outliers using z score. But some of the results are fucking waaaaaack!
-    (df, outlier_count) = remove_outlier(df, cols=['Motor','Household','Health','Life','Work_Compensation'])
+    (df, outliers_count) = remove_outliers(df, cols=['Motor','Household','Health','Life','Work_Compensation'])
 
-    print("outlier_count:\n",outlier_count, "\n")
+    print(f"outlier_count:\n{outlier_count}\n")
     print(df.head(2))
 
 

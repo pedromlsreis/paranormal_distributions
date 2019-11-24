@@ -46,13 +46,14 @@ def adding_dummies(df, cols):
 
 #another way, but it needs a dataframe with columns that are numeric and have outliers
 
-def remove_outlier(df, cols):
+def remove_outliers(df, cols):
     """Removes outliers and replace them by NaNs.
     Selected columns must be numerical."""
-    outlier_count = ((df[cols] == df[~(np.abs(df - df.mean()) > (3 * df.std()))][cols]) == False)[cols].sum()
+    outliers_count = ((df[cols] == df[~(np.abs(df - df.mean()) > (3 * df.std()))][cols]) == False)[cols].sum()
     temp_df = df[cols].copy()
-    df = temp_df[~(np.abs(temp_df - temp_df.mean()) > (3 * temp_df.std()))].copy()
-    return df, outlier_count
+    temp_df = temp_df[~(np.abs(temp_df - temp_df.mean()) > (3 * temp_df.std()))]
+    df.loc[:, cols] = temp_df.loc[:, cols].copy()
+    return df, outliers_count
 
 
 #Data transformation
