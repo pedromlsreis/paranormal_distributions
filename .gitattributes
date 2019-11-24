@@ -1,2 +1,2 @@
-* linguist-vendored
-*.py linguist-vendored=false
+out/* linguist-vendored
+*.html linguist-vendored=false
