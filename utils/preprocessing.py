@@ -23,7 +23,7 @@ Data preprocessing
 """
 
 #Cleaning the data
-def cleaning_dataframe(df):
+def cleaning_df(df):
     df.loc[df["Birthday"] < 1900, "Birthday"] = np.nan  # turning impossible values into NaN
     df.loc[df["First_Policy"] > 2020, "First_Policy"] = np.nan
     df["Education"] = df["Education"].str.extract(r"(\d)").astype(np.float)  # turning Education into numeric
@@ -31,7 +31,7 @@ def cleaning_dataframe(df):
 
 
 #Creating Dummy variables for Area and Education
-def adding_dummies(df, cols):
+def add_dummies(df, cols):
     """Adds dummy columns to selected variables using the One Hot Encoding method. Drops the first column."""
     df_with_dummies = pd.get_dummies(df, columns=cols, drop_first=True)
     return df_with_dummies
@@ -56,8 +56,16 @@ def remove_outliers(df, cols):
     return df, outliers_count
 
 
+# Data standardization
+def standardize_data(df, cols):
+    """Standardizes data from `cols`.
+    """
+    
+    return df
+
+
 #Data transformation
-def preprocessing_dataframe(df):
-    df = cleaning_dataframe(df)
+def preprocessing_df(df):
+    df = cleaning_df(df)
     dups_df = df[df.duplicated(keep="first")].copy() # duplicated rows (showing only the duplicates)
     return df, dups_df
