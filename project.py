@@ -37,7 +37,7 @@ my_path = r'.\data\insurance.db'
 
 def run(path = str, profile = bool):
     # data extraction
-    original_df, df = data_extract(path)
+    _, df = data_extract(path)
 
     #exploring the data
     if profile:
