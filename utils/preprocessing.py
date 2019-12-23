@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 """
 Steps to follow, according to the lectures:
@@ -75,7 +76,6 @@ def standardize_data(df, cols):
     """Standardizes data from `cols`.
     cols -> list
     """
-    from sklearn.preprocessing import StandardScaler
     df[cols] = StandardScaler().fit_transform(df[cols])
     return df
 
