@@ -73,7 +73,10 @@ def remove_outliers(df, cols):
 # Data standardization
 def standardize_data(df, cols):
     """Standardizes data from `cols`.
+    cols -> list
     """
+    from sklearn.preprocessing import StandardScaler
+    df[cols] = StandardScaler().fit_transform(df[cols])
     return df
 
 
