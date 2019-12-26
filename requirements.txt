@@ -1,6 +1,5 @@
-numpy
-scipy
-pandas
-matplotlib
-seaborn
-pandas_profiling
+pip==19.2.3
+pandas_profiling==2.3.0
+pandas==0.25.1
+numpy==1.16.5
+scikit_learn==0.22
