@@ -57,19 +57,30 @@ def outlier_conditions(df):
 
 def remove_outliers(df, cols):
     """
-    Removes outliers and replace them by NaNs.
+    Replaces outliers by NaNs.
     Selected columns must be numerical.
     """
     outlier_df_cond = outlier_conditions(df)
     outliers_count = (
         (df[cols] == df[outlier_df_cond][cols]) == False
         )[cols].sum()
+    
     temp_df = df[cols].copy()
     outlier_tempdf_cond = outlier_conditions(temp_df)
     temp_df = temp_df[outlier_tempdf_cond]
+    
     df.loc[:, cols] = temp_df.loc[:, cols].copy()
     return df, outliers_count
 
+
+
+def handle_nans(df, cols):
+    """
+    Replaces NaNs by column mean.
+    Selected columns must be numerical.
+    """
+    df.fillna(df.mean()[cols], inplace=True)
+    return df
 
 # Data standardization
 def standardize_data(df, cols):
