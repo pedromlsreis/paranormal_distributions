@@ -66,7 +66,6 @@ def remove_outliers(df, cols):
     return df, outliers_count
 
 
-
 def handle_nans(df, cols):
     """
     Replaces NaNs by column mean.
@@ -75,7 +74,7 @@ def handle_nans(df, cols):
     df.fillna(df.mean()[cols], inplace=True)
     return df
 
-# Data standardization
+
 def standardize_data(df, cols):
     """Standardizes data from `cols`.
     cols -> list
@@ -84,7 +83,6 @@ def standardize_data(df, cols):
     return df
 
 
-# Data transformation
 def preprocessing_df(df):
     df = cleaning_df(df)
     df, outliers_count = remove_outliers(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
