@@ -86,7 +86,7 @@ def standardize_data(df, cols):
 def preprocessing_df(df):
     df = cleaning_df(df)
     df, outliers_count = remove_outliers(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
-    df = handle_nans(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
+    df = handle_nans(df, ["Salary", "First_Policy", "Birthday", "Children", 'Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
     df = standardize_data(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
     df = add_dummies(df, ['Area', 'Education'])
     # duplicated rows (showing only the duplicates)

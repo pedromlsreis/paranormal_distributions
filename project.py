@@ -23,21 +23,18 @@ pd.set_option('display.float_format', '{:.2f}'.format)
 # source: https://docs.python.org/3/library/sqlite3.html
 
 
-def run(path=str, profile=bool):
+def run(path=str, profile_after_extract=bool, profile_at_end=bool):
     # data extraction
     _, df = data_extract(path)
     # exploring the data
-    if profile:
+    if profile_after_extract:
         try:
             import pandas_profiling
         except ImportError as e:
             print(e.args)
             pipmain(['install', 'pandas_profiling'])
             import pandas_profiling
-        prof = df.profile_report(
-            style={'full_width': True},
-            title='Pandas Profiling Report'
-            )
+        prof = df.profile_report(style={'full_width': True}, title='Pandas Profiling Report')
         prof.to_file(output_file="./out/df_profiling.html")
 
     # data preprocessing
@@ -46,8 +43,17 @@ def run(path=str, profile=bool):
     print(f"outlier_count:\n{outliers_count}\n")
     print(df.head(2))
 
+    if profile_at_end:
+        try:
+            import pandas_profiling
+        except ImportError as e:
+            print(e.args)
+            pipmain(['install', 'pandas_profiling'])
+            import pandas_profiling
+        prof = df.profile_report(style={'full_width': True}, title='Pandas Profiling Report')
+        prof.to_file(output_file="./out/df_profiling_at_end.html")
 
 my_path = r'.\data\insurance.db'
 
 if __name__ == "__main__":
-    run(path=my_path, profile=False)
+    run(path=my_path, profile_after_extract=False, profile_at_end=True)
