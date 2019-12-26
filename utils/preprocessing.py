@@ -22,8 +22,9 @@ Data preprocessing
 
 """
 
+# undocumented handy function: df._get_numeric_data()
 
-# Cleaning the data
+
 def cleaning_df(df):
     # turning impossible values into NaN
     df.loc[df["Birthday"] < 1900, "Birthday"] = np.nan
@@ -33,7 +34,6 @@ def cleaning_df(df):
     return df
 
 
-# Creating Dummy variables for Area and Education
 def add_dummies(df, cols):
     """Adds dummy columns to selected variables using the One Hot Encoding method.
     Drops the first column."""
@@ -41,13 +41,6 @@ def add_dummies(df, cols):
     return df_with_dummies
 
 
-# Dealing with Missing Values
-
-
-# Dealing with Outliers
-
-
-# another way, but it needs a df with only numeric columns that have outliers
 def outlier_conditions(df):
     """
     Sets the condition for the identification of outliers in a dataframe
@@ -94,6 +87,10 @@ def standardize_data(df, cols):
 # Data transformation
 def preprocessing_df(df):
     df = cleaning_df(df)
+    df, outliers_count = remove_outliers(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
+    df = handle_nans(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
+    df = standardize_data(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
+    df = add_dummies(df, ['Area', 'Education'])
     # duplicated rows (showing only the duplicates)
-    dups_df = df[df.duplicated(keep="first")].copy()
-    return df, dups_df
+    # dups_df = df[df.duplicated(keep="first")].copy()
+    return df, outliers_count
