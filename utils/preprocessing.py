@@ -34,7 +34,7 @@ def cleaning_df(df):
 
 
 # Creating Dummy variables for Area and Education
-def adding_dummies(df, cols):
+def add_dummies(df, cols):
     """Adds dummy columns to selected variables using the One Hot Encoding method.
     Drops the first column."""
     df_with_dummies = pd.get_dummies(df, columns=cols, drop_first=True)
