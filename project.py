@@ -59,4 +59,4 @@ def run(path=str, profile_after_extract=False, profile_at_end=False, nb_explorat
 my_path = r'.\data\insurance.db'
 
 if __name__ == "__main__":
-    run(path=my_path, profile_after_extract=False, profile_at_end=True, nb_exploration=False)
+    run(path=my_path, profile_after_extract=False, profile_at_end=False, nb_exploration=False)
