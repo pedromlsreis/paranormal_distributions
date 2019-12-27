@@ -8,9 +8,22 @@ Group Project for the Data Mining course of the MSc. in Data Science and Advance
 
 ## Installation
 
+Just type the following in your terminal:
+
+```
+pip install -r /path/to/requirements.txt
+```
+
+Boom. You can now run our project. <br>
+Thanks to [pipreqs](https://github.com/bndr/pipreqs), our pip `requirements.txt` was automatically generated, based on our imports.
 
 ## Usage
 
+To use our program, you just need to run our `project.py` main script, as in:
+
+```
+python /path/to/project.py
+```
 
 ## Credits
 Group N, composed by:
