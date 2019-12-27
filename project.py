@@ -23,7 +23,7 @@ pd.set_option('display.float_format', '{:.2f}'.format)
 # source: https://docs.python.org/3/library/sqlite3.html
 
 
-def run(path=str, profile_after_extract=bool, profile_at_end=bool):
+def run(path=str, profile_after_extract=False, profile_at_end=False, nb_exploration=False):
     # data extraction
     _, df = data_extract(path)
     # exploring the data
@@ -52,8 +52,11 @@ def run(path=str, profile_after_extract=bool, profile_at_end=bool):
             import pandas_profiling
         prof = df.profile_report(style={'full_width': True}, title='Pandas Profiling Report')
         prof.to_file(output_file="./out/df_profiling_at_end.html")
+    
+    if nb_exploration:
+        return df
 
 my_path = r'.\data\insurance.db'
 
 if __name__ == "__main__":
-    run(path=my_path, profile_after_extract=False, profile_at_end=True)
+    run(path=my_path, profile_after_extract=False, profile_at_end=True, nb_exploration=False)

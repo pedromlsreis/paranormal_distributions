@@ -84,12 +84,20 @@ def standardize_data(df, cols):
 
 
 def preprocessing_df(df):
+    # TODO: can we use dummy vars for cluster formation? If not, stop add_dummies.
+    getting_dummies_of_area_and_education = False
+
     df = cleaning_df(df)
     df, outliers_count = remove_outliers(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
     df = handle_nans(df, ["Salary", "First_Policy", "Birthday", "Children", 'Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
-    df["Children"] = df["Children"].astype(np.int8)
+    df[["Children", "First_Policy", "Birthday", "Salary"]] = df[["Children", "First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
+    if not getting_dummies_of_area_and_education:
+        df = handle_nans(df, ["Area", "Education"])
+        df[["Area", "Education"]] = df[["Area", "Education"]].round().astype(np.int32)
+        df[["Area", "Education"]] = df[["Area", "Education"]].astype("category")
     df = standardize_data(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
-    df = add_dummies(df, ['Area', 'Education'])
+    if getting_dummies_of_area_and_education:
+        df = add_dummies(df, ['Area', 'Education'])
     # duplicated rows (showing only the duplicates)
     # dups_df = df[df.duplicated(keep="first")].copy()
     return df, outliers_count
