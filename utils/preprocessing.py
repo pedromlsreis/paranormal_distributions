@@ -83,21 +83,32 @@ def standardize_data(df, cols):
     return df
 
 
+def feature_eng(df):
+    """
+    Creates useful features from the original ones in the dataframe.
+    """
+    if "Birthday" in df.columns:
+        df["Age"] = 2016 - df["Birthday"]
+        del df["Birthday"]
+    
+    if "First_Policy" in df.columns:
+        df["Customer_Years"] = 2016 - df["First_Policy"]
+        del df["First_Policy"]
+    
+    return df
+
+
 def preprocessing_df(df):
-    # TODO: can we use dummy vars for cluster formation? If not, stop add_dummies.
-    getting_dummies_of_area_and_education = False
+    # Dummy variables creation for both "Area" and "Education" categorical variables was not considered.
 
     df = cleaning_df(df)
     df, outliers_count = remove_outliers(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
-    df = handle_nans(df, ["Salary", "First_Policy", "Birthday", "Children", 'Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
-    df[["Children", "First_Policy", "Birthday", "Salary"]] = df[["Children", "First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
-    if not getting_dummies_of_area_and_education:
-        df = handle_nans(df, ["Area", "Education"])
-        df[["Area", "Education"]] = df[["Area", "Education"]].round().astype(np.int32)
-        df[["Area", "Education"]] = df[["Area", "Education"]].astype("category")
+    df = handle_nans(df, ["Salary", "First_Policy", "Birthday", "Children", "Area", "Education", 'Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
+    df[["Children", "First_Policy", "Birthday", "Salary", "Area", "Education"]] = df[["Children", "First_Policy", "Birthday", "Salary", "Area", "Education"]].round().astype(np.int32)
+    df[["Area", "Education"]] = df[["Area", "Education"]].astype("category")
     df = standardize_data(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
-    if getting_dummies_of_area_and_education:
-        df = add_dummies(df, ['Area', 'Education'])
+    df = feature_eng(df)
+
     # duplicated rows (showing only the duplicates)
     # dups_df = df[df.duplicated(keep="first")].copy()
     return df, outliers_count
