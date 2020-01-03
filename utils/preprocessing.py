@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
 
 """
 Steps to follow, according to the lectures:
@@ -75,6 +76,39 @@ def handle_nans(df, cols):
     return df
 
 
+def handle_cat_nans(df, cols):
+    """
+    Uses a Random Forest classifier to predict and impute the nan values 
+    for each categorical column given in `cols`.
+    """
+    used_cat_cols = []
+
+    for cat_col in cols:
+        used_cat_cols.append(cat_col)
+        aux_df = df.loc[df[cat_col].isna() == False, df.columns.difference(
+            list(set(cols) - set(used_cat_cols))
+        )].copy()
+
+        aux_df[cat_col] = aux_df[cat_col].round().astype(np.int8)
+
+        Xcols = aux_df.columns.tolist()
+        Xcols.remove(cat_col)
+        X_train = aux_df.loc[:, Xcols].values
+        y_train = aux_df.loc[:, cat_col].values
+
+        clf = RandomForestClassifier(n_estimators=200, max_depth=5, random_state=2019)
+        clf.fit(X_train, y_train)
+
+        X_test = df.loc[df[cat_col].isna(), Xcols]    
+        y_pred = clf.predict(X_test)
+        
+        for pred, index in zip(y_pred, X_test.index.tolist()):
+            df.loc[index, cat_col] = pred
+        print(f'NaN values of "{cat_col}" column were imputed.')
+
+    return df
+
+
 def standardize_data(df, cols):
     """Standardizes data from `cols`.
     cols -> list
@@ -99,14 +133,18 @@ def feature_eng(df):
 
 
 def preprocessing_df(df):
-    # Dummy variables creation for both "Area" and "Education" categorical variables was not considered.
-
+    premiums_cols = ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation']
+    categorical_cols = ["Area", "Education"]
+    
     df = cleaning_df(df)
-    df, outliers_count = remove_outliers(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
-    df = handle_nans(df, ["Salary", "First_Policy", "Birthday", "Children", "Area", "Education", 'Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
-    df[["Children", "First_Policy", "Birthday", "Salary", "Area", "Education"]] = df[["Children", "First_Policy", "Birthday", "Salary", "Area", "Education"]].round().astype(np.int32)
-    df[["Area", "Education"]] = df[["Area", "Education"]].astype("category")
-    df = standardize_data(df, ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
+    df, outliers_count = remove_outliers(df, premiums_cols)
+    df = handle_nans(df, ["Salary", "First_Policy", "Birthday", "Children", 'Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
+    df = handle_cat_nans(df, categorical_cols)
+
+    df[["Children", "First_Policy", "Birthday", "Salary"]] = df[["Children", "First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
+    df[categorical_cols] = df[categorical_cols].astype("category")
+    
+    df = standardize_data(df, premiums_cols)
     df = feature_eng(df)
 
     # duplicated rows (showing only the duplicates)
