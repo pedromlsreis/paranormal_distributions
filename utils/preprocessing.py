@@ -133,15 +133,15 @@ def feature_eng(df):
 
 
 def preprocessing_df(df):
-    premiums_cols = ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation']
-    categorical_cols = ["Area", "Education"]
+    premiums_cols = ["Motor", "Household", "Health", "Life", "Work_Compensation"]
+    categorical_cols = ["Area", "Education", "Children"]
     
     df = cleaning_df(df)
     df, outliers_count = remove_outliers(df, premiums_cols)
-    df = handle_nans(df, ["Salary", "First_Policy", "Birthday", "Children", 'Motor', 'Household', 'Health', 'Life', 'Work_Compensation'])
+    df = handle_nans(df, ["Salary", "First_Policy", "Birthday", "Motor", "Household", "Health", "Life", "Work_Compensation"])
     df = handle_cat_nans(df, categorical_cols)
 
-    df[["Children", "First_Policy", "Birthday", "Salary"]] = df[["Children", "First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
+    df[["First_Policy", "Birthday", "Salary"]] = df[["First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
     df[categorical_cols] = df[categorical_cols].astype("category")
     
     df = standardize_data(df, premiums_cols)
