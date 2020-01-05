@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 
 """
 Steps to follow, according to the lectures:
@@ -132,6 +133,20 @@ def feature_eng(df):
     return df
 
 
+def dim_reduction(df):
+    """
+    Applies Principal Component Analysis (PCA) to the dataframe.
+    """
+    x = df.values
+    pca = PCA(n_components=2)
+    principalComponents = pca.fit_transform(x)
+    principalDf = pd.DataFrame(data = principalComponents, columns = ['principal_comp_1', 'principal_comp_2'])
+    print(pca.explained_variance_ratio_)
+    return principalDf
+
+
+
+
 def preprocessing_df(df):
     premiums_cols = ["Motor", "Household", "Health", "Life", "Work_Compensation"]
     categorical_cols = ["Area", "Education", "Children"]
@@ -144,8 +159,10 @@ def preprocessing_df(df):
     df[["First_Policy", "Birthday", "Salary"]] = df[["First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
     df[categorical_cols] = df[categorical_cols].astype("category")
     
-    df = standardize_data(df, premiums_cols)
     df = feature_eng(df)
+    df = standardize_data(df, premiums_cols)
+
+    # df = dim_reduction(df)
 
     # duplicated rows (showing only the duplicates)
     # dups_df = df[df.duplicated(keep="first")].copy()
