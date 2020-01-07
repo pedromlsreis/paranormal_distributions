@@ -3,7 +3,8 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-
+import seaborn as sb
+from matplotlib import pyplot as plt
 """
 Steps to follow, according to the lectures:
 Data preparation
@@ -131,6 +132,22 @@ def standardize_data(df, cols):
     df_Norm[cols] = StandardScaler().fit_transform(df[cols])
     return df, df_Norm
 
+def feature_selection(df):
+    corr = df.corr(method='pearson')
+
+# Obtain Correlation and plot it
+    plt.figure(figsize=(16,6))
+
+    h_map = sb.heatmap(corr, 
+            xticklabels=corr.columns,
+            yticklabels=corr.columns,
+            cmap='PRGn', annot=True, linewidths=.5)
+
+    bottom, top = h_map.get_ylim()
+    h_map.set_ylim(bottom + 0.5, top - 0.5)
+
+    plt.show()
+
 
 def feature_eng(df):
     """
@@ -161,38 +178,27 @@ def dim_reduction(df):
 
 def preprocessing_df(df):
     #seperation of variables
-    ValueEngage = ['Age',
-                   'Education',
-                   'Salary',
-                   'Area',
-                   'Children',
-                   'CMV',
-                   'Claims',
-                   'Customer_Years']
+    ValueEngage = ['Age', 'Education', 'Salary', 'Area', 'Children', 'CMV', 'Customer_Years']
     
-    ConsAff = ['Motor',
-               'Household',
-               'Health',
-               'Life',
-               'Work_Compensation']
+    ConsAff = ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation']
+
+    Cat_Values = ["Area", "Education", "Children"]
 
 
-
-
-    premiums_cols = ["Motor", "Household", "Health", "Life", "Work_Compensation"]
-    categorical_cols = ["Area", "Education", "Children"]
     
     df = cleaning_df(df)
-    df, outliers_count = remove_outliers(df, premiums_cols)
-    df = handle_nans(df, ["Salary", "First_Policy", "Birthday", "Motor", "Household", "Health", "Life", "Work_Compensation"])
-    df = handle_cat_nans(df, categorical_cols)
+    df, outliers_count = remove_outliers(df, df.columns)
+    
+    df = handle_nans(df, ["Salary", "First_Policy", "Birthday"])
+    #df = handle_cat_nans(df, Cat_Values)
+    df = handle_premium_nans(df, ConsAff)
 
     df[["First_Policy", "Birthday", "Salary"]] = df[["First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
-    df[categorical_cols] = df[categorical_cols].astype("category")
+    df[Cat_Values] = df[Cat_Values].astype("category")
     
     df = feature_eng(df)
-    df, df_Norm = standardize_data(df, premiums_cols)
+    df, df_Norm = standardize_data(df, [*ConsAff, 'Salary', 'CMV', 'Customer_Years'])
 
     # df = dim_reduction(df)
     
-    return df, outliers_count
+    return df, df_Norm

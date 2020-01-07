@@ -38,14 +38,14 @@ def run(path=str, profile_after_extract=False, nb_exploration=False):
         prof.to_file(output_file="./out/df_profiling.html")
 
     # data preprocessing
-    df, _ = preprocessing_df(df)
+    df, df_Norm = preprocessing_df(df)
 
     print(df.head(2))
     
     if nb_exploration:
         return df
 
-my_path = r'.\data\insurance.db'
+my_path = r'./data/insurance.db'
 
 if __name__ == "__main__":
     run(path=my_path)
