@@ -40,7 +40,7 @@ def run(path=str, profile_after_extract=False, nb_exploration=False):
     # data preprocessing
     df, df_Norm = preprocessing_df(df)
 
-    print(df.head(2))
+    print(df.head(10))
     
     if nb_exploration:
         return df

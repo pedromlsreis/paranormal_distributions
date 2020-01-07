@@ -5,6 +5,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 import seaborn as sb
 from matplotlib import pyplot as plt
+from sklearn.neighbors import KNeighborsRegressor
+
 """
 Steps to follow, according to the lectures:
 Data preparation
@@ -82,12 +84,15 @@ def handle_nans(df, cols):
     df.fillna(df.mean()[cols], inplace=True)
     return df
 
+
+
 def handle_premium_nans(df, cols):
     """
     Replaces NaNs with 0.
     Selected columns must be continuous.
     """
-    df.fillna(0, inplace=True)
+    for col in cols:
+        df[col].fillna(0, inplace=True)
     return df
 
 
@@ -190,7 +195,9 @@ def preprocessing_df(df):
     df, outliers_count = remove_outliers(df, df.columns)
     
     df = handle_nans(df, ["Salary", "First_Policy", "Birthday"])
-    #df = handle_cat_nans(df, Cat_Values)
+    
+    
+    df = handle_cat_nans(df, Cat_Values)
     df = handle_premium_nans(df, ConsAff)
 
     df[["First_Policy", "Birthday", "Salary"]] = df[["First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
