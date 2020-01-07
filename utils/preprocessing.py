@@ -35,6 +35,7 @@ def cleaning_df(df):
     df.loc[df["Birthday"] > 2016, "Birthday"] = np.nan
     df.loc[df["First_Policy"] > 2016, "First_Policy"] = np.nan
     df.loc[df["Birthday"] > df["First_Policy"], "First_Policy"] = np.nan
+
     # turning Education into numeric
     df["Education"] = df["Education"].str.extract(r"(\d)").astype(np.float)
     return df

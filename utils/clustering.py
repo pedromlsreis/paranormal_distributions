@@ -12,6 +12,29 @@ import numpy as np
 import seaborn as sb
 from matplotlib import pyplot as plt
 
+"""
+#####################################
+######### Agglomerative #############
+#####################################
+"""
+import scipy.cluster.hierarchy as shc
+from sklearn.cluster import AgglomerativeClustering
+
+plt.figure(figsize=(10, 7))
+plt.title("Customer Dendograms")
+dend = shc.dendrogram(shc.linkage(df_forClus, method='ward'))
+
+
+
+n_clusters = 5
+
+cluster = AgglomerativeClustering(n_clusters=n_clusters, affinity='euclidean', linkage='ward')
+cluster.fit_predict(df_forClus)
+
+plt.figure(figsize=(10, 7))
+plt.scatter(df_forClus.iloc[:,0], df_forClus.iloc[:,1], c=cluster.labels_, cmap='rainbow')
+
+plt.show()
 
 
 """
@@ -29,7 +52,7 @@ Sum_of_squared_distances = []
 K = range(1,20)
 for k in K:
     km = KMeans(n_clusters=k)
-    km = km.fit(CA_Norm)
+    km = km.fit(df_forClus)
     Sum_of_squared_distances.append(km.inertia_)
 
 # Plot the elbow
@@ -40,14 +63,14 @@ plt.title('Elbow Method For Optimal k')
 plt.show()
 
 
-n_clusters = 3
+n_clusters = 5
 
 kmeans = KMeans(n_clusters=n_clusters, 
                 random_state=0,
                 n_init = 10,
-                max_iter = 2000).fit(CA_Norm)
+                max_iter = 2000).fit(df_forClus)
 
-my_clusters = pd.DataFrame(kmeans.cluster_centers_)
+kmeans_clusters = pd.DataFrame(kmeans.cluster_centers_)
 
 
 
@@ -121,10 +144,10 @@ def silplot(X, clusterer, pointlabels=None):
 
     # 2nd Plot showing the actual clusters formed
     colors = cm.nipy_spectral(cluster_labels.astype(float) / n_clusters)
-    ax2.scatter(X[:, 0], X[:, 1], marker='.', s=200, lw=0, alpha=0.7,
+    ax2.scatter(X.iloc[:, 0], X.iloc[:, 1], marker='.', s=200, lw=0, alpha=0.7,
                 c=colors, edgecolor='k')
-    xs = X[:, 0]
-    ys = X[:, 1]
+    xs = X.iloc[:, 0]
+    ys = X.iloc[:, 1]
     
     if pointlabels is not None:
         for i in range(len(xs)):
@@ -148,5 +171,24 @@ def silplot(X, clusterer, pointlabels=None):
                   "with n_clusters = %d" % n_clusters),
                  fontsize=14, fontweight='bold')
 
-silplot(CA_Norm, kmeans)
+silplot(df_forClus, kmeans)
 plt.show()
+
+
+
+"""
+#####################################
+############# K-modes ###############
+#####################################
+"""
+
+#need to define df_cat with categorical values with no standarisation
+
+from kmodes.kmodes import KModes
+km = KModes(n_clusters=4, init='Huang', n_init=5, verbose=1)
+
+clusters = km.fit_predict(df_cat)
+
+# get an array of cluster modes
+kmodes = km.cluster_centroids_
+shape = kmodes.shape
