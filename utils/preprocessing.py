@@ -40,7 +40,7 @@ def cleaning_df(df):
     df.loc[df["Birthday"] > df["First_Policy"], "First_Policy"] = np.nan
 
     # turning Education into numeric
-    df["Education"] = df["Education"].str.extract(r"(\d)").astype(np.float)
+    df.loc[:, "Education"] = df["Education"].str.extract(r"(\d)").astype(np.float)
     return df
 
 
@@ -55,6 +55,16 @@ def outlier_conditions(df):
     """
     Sets the condition for the identification of outliers in a dataframe
     """
+    ~((df < (Q1 - 1.5 * IQR)) |(df > (Q3 + 1.5 * IQR)))
+
+
+    Q1 = df['col'].quantile(.25)
+    Q3 = df['col'].quantile(.75)
+    mask = d['col'].between(q1, q2, inclusive=True)
+    iqr = d.loc[mask, 'col']
+
+
+
     return ~(np.abs(df - df.mean()) > (3 * df.std()))
 
 
@@ -74,6 +84,33 @@ def remove_outliers(df, cols):
     
     df.loc[:, cols] = temp_df.loc[:, cols].copy()
     return df, outliers_count
+
+
+# def remove_outliers(df, cols):
+#     """
+#     Replaces outliers by NaNs.
+#     Selected columns must be numerical.
+#     """
+#     ~((df < (Q1 - 1.5 * IQR)) | (df > (Q3 + 1.5 * IQR)))
+
+
+#     for col in cols:
+#         Q1 = df[col].quantile(.25)
+#         Q3 = df[col].quantile(.75)
+
+#         mask = df[col].between(Q1, Q3, inclusive=True)
+#         IQR = df.loc[mask, col]
+        
+#         df.loc[
+#             (df[col] < (Q1 - 1.5 * IQR)) | ( )
+#             , col
+#         ] = np.nan
+
+#         cond = (df < (Q1 - 1.5 * IQR)) | (df > (Q3 + 1.5 * IQR))
+
+
+
+#     return df, outliers_count
 
 
 def handle_nans(df, cols):
@@ -100,28 +137,31 @@ def handle_cat_nans(df, cols):
     Uses a Random Forest classifier to predict and impute the nan values 
     for each categorical column given in `cols`.
     """
-    Xcols = []
+    # Xcols = []
 
-    for cat_col in cols:
-        if df[cat_col].isna().any().sum() != 0:
-            Xcols.append(cat_col)
+    # for cat_col in cols:
+    #     if df[cat_col].isna().any().sum() != 0:
+    #         Xcols.append(cat_col)
     
-    if len(Xcols) != 0:
-        for nan_col in Xcols:
-            X_train = df.loc[:, df.columns.difference( list(set(Xcols) - set(list(nan_col))) )].values
-            y_train = df.loc[:, nan_col].values
-            clf = RandomForestClassifier(n_estimators=200, max_depth=5, random_state=2019)
-            clf.fit(X_train, y_train)
-            X_test = df.loc[df[cat_col].isna(), Xcols].copy()
-            y_pred = clf.predict(X_test)
+    # if len(Xcols) != 0:
+    #     for nan_col in Xcols:
+    #         X_train = df.loc[:, df.columns.difference( list(set(Xcols) - set(list(nan_col))) )].values
+    #         y_train = df.loc[:, nan_col].values
+    #         clf = RandomForestClassifier(n_estimators=200, max_depth=5, random_state=2019)
+    #         clf.fit(X_train, y_train)
+    #         X_test = df.loc[df[cat_col].isna(), Xcols].copy()
+    #         y_pred = clf.predict(X_test)
             
-            for pred, index in zip(y_pred, X_test.index.tolist()):
-                df.loc[index, cat_col] = pred
+    #         for pred, index in zip(y_pred, X_test.index.tolist()):
+    #             df.loc[index, cat_col] = pred
 
-            print(f'NaN values of "{cat_col}" column were imputed.')
-        return df
-    else:
-        return df
+    #         print(f'NaN values of "{cat_col}" column were imputed.')
+    #     return df
+    # else:
+    #     return df
+    for col in cols:
+        df[col].fillna(df.mode()[cols], inplace=True)
+    return df
 
 
 def standardize_data(df, cols):
@@ -131,6 +171,7 @@ def standardize_data(df, cols):
     df_Norm = df[cols].copy()
     df_Norm[cols] = StandardScaler().fit_transform(df[cols])
     return df, df_Norm
+
 
 def feature_selection(df):
     corr = df.corr(method='pearson')
@@ -179,18 +220,24 @@ def dim_reduction(df):
 def preprocessing_df(df):
     #separation of variables
     ValueEngage = ['Age', 'Education', 'Salary', 'Area', 'Children', 'CMV', 'Customer_Years']
+
     ConsAff = ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation']
     Cat_Values = ["Area", "Education", "Children"]
     
+    collist = []
+    collist.extend(ConsAff)
+    collist.extend(Cat_Values)
+
     df = cleaning_df(df)
-    df, outliers_count = remove_outliers(df, df.columns)
+    # df, outliers_count = remove_outliers(df, df.columns)
     
-    df = handle_nans(df, ["Salary", "First_Policy", "Birthday"])
+    df = handle_nans(df, df.columns.difference(collist))
     df = handle_premium_nans(df, ConsAff)
     df = handle_cat_nans(df, Cat_Values)
 
-    df[["First_Policy", "Birthday", "Salary"]] = df[["First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
-    df[Cat_Values] = df[Cat_Values].astype("category")
+    df.loc[:, ["First_Policy", "Birthday", "Salary"]] = df[["First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
+
+    df.loc[:, Cat_Values] = df[Cat_Values].astype("category")
     
     df = feature_eng(df)
     df, df_Norm = standardize_data(df, [*ConsAff, 'Salary', 'CMV', 'Customer_Years'])
