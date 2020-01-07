@@ -161,11 +161,9 @@ def preprocessing_df(df):
     df[["First_Policy", "Birthday", "Salary"]] = df[["First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
     df[categorical_cols] = df[categorical_cols].astype("category")
     
-    # df = feature_eng(df)
+    df = feature_eng(df)
     df = standardize_data(df, premiums_cols)
 
     # df = dim_reduction(df)
-
-    # duplicated rows (showing only the duplicates)
-    # dups_df = df[df.duplicated(keep="first")].copy()
+    
     return df, outliers_count
