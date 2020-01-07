@@ -229,7 +229,7 @@ def preprocessing_df(df):
     collist.extend(Cat_Values)
 
     df = cleaning_df(df)
-    # df, outliers_count = remove_outliers(df, df.columns)
+    df, outliers_count = remove_outliers(df, df.columns)
     
     df = handle_nans(df, df.columns.difference(collist))
     df = handle_premium_nans(df, ConsAff)
