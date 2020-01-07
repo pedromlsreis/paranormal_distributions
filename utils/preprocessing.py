@@ -30,7 +30,9 @@ Data preprocessing
 def cleaning_df(df):
     # turning impossible values into NaN
     df.loc[df["Birthday"] < 1900, "Birthday"] = np.nan
-    df.loc[df["First_Policy"] > 2020, "First_Policy"] = np.nan
+    df.loc[df["Birthday"] > 2016, "Birthday"] = np.nan
+    df.loc[df["First_Policy"] > 2016, "First_Policy"] = np.nan
+    df.loc[df["Birthday"] > df["First_Policy"], "First_Policy"] = np.nan
     # turning Education into numeric
     df["Education"] = df["Education"].str.extract(r"(\d)").astype(np.float)
     return df
@@ -159,7 +161,7 @@ def preprocessing_df(df):
     df[["First_Policy", "Birthday", "Salary"]] = df[["First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
     df[categorical_cols] = df[categorical_cols].astype("category")
     
-    df = feature_eng(df)
+    # df = feature_eng(df)
     df = standardize_data(df, premiums_cols)
 
     # df = dim_reduction(df)
