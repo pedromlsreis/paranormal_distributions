@@ -40,7 +40,7 @@ def cleaning_df(df):
     df.loc[df["Birthday"] > df["First_Policy"], "First_Policy"] = np.nan
 
     # turning Education into numeric
-    df.loc[:, "Education"] = df["Education"].str.extract(r"(\d)").astype(np.float)
+    df["Education"] = df["Education"].str.extract(r"(\d)").astype(np.float)
     return df
 
 
@@ -55,13 +55,13 @@ def outlier_conditions(df):
     """
     Sets the condition for the identification of outliers in a dataframe
     """
-    ~((df < (Q1 - 1.5 * IQR)) |(df > (Q3 + 1.5 * IQR)))
+    # ~((df < (Q1 - 1.5 * IQR)) |(df > (Q3 + 1.5 * IQR)))
 
 
-    Q1 = df['col'].quantile(.25)
-    Q3 = df['col'].quantile(.75)
-    mask = d['col'].between(q1, q2, inclusive=True)
-    iqr = d.loc[mask, 'col']
+    # Q1 = df['col'].quantile(.25)
+    # Q3 = df['col'].quantile(.75)
+    # mask = d['col'].between(q1, q2, inclusive=True)
+    # iqr = d.loc[mask, 'col']
 
 
 
