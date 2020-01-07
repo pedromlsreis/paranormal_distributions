@@ -55,15 +55,11 @@ def outlier_conditions(df):
     """
     Sets the condition for the identification of outliers in a dataframe
     """
-    # ~((df < (Q1 - 1.5 * IQR)) |(df > (Q3 + 1.5 * IQR)))
-
-
     # Q1 = df['col'].quantile(.25)
     # Q3 = df['col'].quantile(.75)
     # mask = d['col'].between(q1, q2, inclusive=True)
     # iqr = d.loc[mask, 'col']
-
-
+    # ~((df < (Q1 - 1.5 * IQR)) |(df > (Q3 + 1.5 * IQR)))
 
     return ~(np.abs(df - df.mean()) > (3 * df.std()))
 
@@ -84,33 +80,6 @@ def remove_outliers(df, cols):
     
     df.loc[:, cols] = temp_df.loc[:, cols].copy()
     return df, outliers_count
-
-
-# def remove_outliers(df, cols):
-#     """
-#     Replaces outliers by NaNs.
-#     Selected columns must be numerical.
-#     """
-#     ~((df < (Q1 - 1.5 * IQR)) | (df > (Q3 + 1.5 * IQR)))
-
-
-#     for col in cols:
-#         Q1 = df[col].quantile(.25)
-#         Q3 = df[col].quantile(.75)
-
-#         mask = df[col].between(Q1, Q3, inclusive=True)
-#         IQR = df.loc[mask, col]
-        
-#         df.loc[
-#             (df[col] < (Q1 - 1.5 * IQR)) | ( )
-#             , col
-#         ] = np.nan
-
-#         cond = (df < (Q1 - 1.5 * IQR)) | (df > (Q3 + 1.5 * IQR))
-
-
-
-#     return df, outliers_count
 
 
 def handle_nans(df, cols):
