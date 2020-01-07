@@ -28,6 +28,8 @@ Data preprocessing
 
 
 def cleaning_df(df):
+    # removing duplicate rows
+    df = df[~df.duplicated(keep="last")]
     # turning impossible values into NaN
     df.loc[df["Birthday"] < 1900, "Birthday"] = np.nan
     df.loc[df["Birthday"] > 2016, "Birthday"] = np.nan
@@ -145,8 +147,6 @@ def dim_reduction(df):
     principalDf = pd.DataFrame(data = principalComponents, columns = ['principal_comp_1', 'principal_comp_2'])
     print(pca.explained_variance_ratio_)
     return principalDf
-
-
 
 
 def preprocessing_df(df):
