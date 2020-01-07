@@ -85,7 +85,6 @@ def handle_nans(df, cols):
     return df
 
 
-
 def handle_premium_nans(df, cols):
     """
     Replaces NaNs with 0.
@@ -101,32 +100,28 @@ def handle_cat_nans(df, cols):
     Uses a Random Forest classifier to predict and impute the nan values 
     for each categorical column given in `cols`.
     """
-    used_cat_cols = []
+    Xcols = []
 
     for cat_col in cols:
-        used_cat_cols.append(cat_col)
-        aux_df = df.loc[df[cat_col].isna() == False, df.columns.difference(
-            list(set(cols) - set(used_cat_cols))
-        )].copy()
+        if df[cat_col].isna().any().sum() != 0:
+            Xcols.append(cat_col)
+    
+    if len(Xcols) != 0:
+        for nan_col in Xcols:
+            X_train = df.loc[:, df.columns.difference( list(set(Xcols) - set(list(nan_col))) )].values
+            y_train = df.loc[:, nan_col].values
+            clf = RandomForestClassifier(n_estimators=200, max_depth=5, random_state=2019)
+            clf.fit(X_train, y_train)
+            X_test = df.loc[df[cat_col].isna(), Xcols].copy()
+            y_pred = clf.predict(X_test)
+            
+            for pred, index in zip(y_pred, X_test.index.tolist()):
+                df.loc[index, cat_col] = pred
 
-        aux_df[cat_col] = aux_df[cat_col].round().astype(np.int8)
-
-        Xcols = aux_df.columns.tolist()
-        Xcols.remove(cat_col)
-        X_train = aux_df.loc[:, Xcols].values
-        y_train = aux_df.loc[:, cat_col].values
-
-        clf = RandomForestClassifier(n_estimators=200, max_depth=5, random_state=2019)
-        clf.fit(X_train, y_train)
-
-        X_test = df.loc[df[cat_col].isna(), Xcols]    
-        y_pred = clf.predict(X_test)
-        
-        for pred, index in zip(y_pred, X_test.index.tolist()):
-            df.loc[index, cat_col] = pred
-        print(f'NaN values of "{cat_col}" column were imputed.')
-
-    return df
+            print(f'NaN values of "{cat_col}" column were imputed.')
+        return df
+    else:
+        return df
 
 
 def standardize_data(df, cols):
@@ -140,7 +135,7 @@ def standardize_data(df, cols):
 def feature_selection(df):
     corr = df.corr(method='pearson')
 
-# Obtain Correlation and plot it
+    # Obtain Correlation and plot it
     plt.figure(figsize=(16,6))
 
     h_map = sb.heatmap(corr, 
@@ -182,23 +177,17 @@ def dim_reduction(df):
 
 
 def preprocessing_df(df):
-    #seperation of variables
+    #separation of variables
     ValueEngage = ['Age', 'Education', 'Salary', 'Area', 'Children', 'CMV', 'Customer_Years']
-    
     ConsAff = ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation']
-
     Cat_Values = ["Area", "Education", "Children"]
-
-
     
     df = cleaning_df(df)
     df, outliers_count = remove_outliers(df, df.columns)
     
     df = handle_nans(df, ["Salary", "First_Policy", "Birthday"])
-    
-    
-    df = handle_cat_nans(df, Cat_Values)
     df = handle_premium_nans(df, ConsAff)
+    df = handle_cat_nans(df, Cat_Values)
 
     df[["First_Policy", "Birthday", "Salary"]] = df[["First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
     df[Cat_Values] = df[Cat_Values].astype("category")
