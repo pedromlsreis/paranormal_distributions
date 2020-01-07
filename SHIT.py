@@ -340,13 +340,17 @@ import scipy.cluster.hierarchy as shc
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
+#temp_df = scaler.fit_transform(df_Norm)
+temp_df = df_Norm[['Motor', 'Household', 'Health', 'Life', 'Work_Compensation', 'Salary',
+       'CMV', 'Customer_Years']]
+df_Norm.columns
 
 plt.figure(figsize=(10, 7))
 plt.title("Customer Dendograms")
-dend = shc.dendrogram(shc.linkage(df_Norm, method='ward'))
+dend = shc.dendrogram(shc.linkage(temp_df, method='ward'))
 
 
-"""
+
 n_clusters = 5
 
 cluster = AgglomerativeClustering(n_clusters=n_clusters, affinity='euclidean', linkage='ward')
@@ -359,32 +363,34 @@ plt.show()
 
 # Do the necessary transformations
 
-
+df
 
 """
+temp_df = scaler.fit_transform(temp_df)
+
 k = 5
 
 Hclustering = AgglomerativeClustering(n_clusters=k,
                                       affinity='euclidean',
                                       linkage='ward')
-my_HC = Hclustering.fit(df_Norm)
+my_HC = Hclustering.fit(temp_df)
 
 my_labels = pd.DataFrame(my_HC.labels_)
 my_labels.columns =  ['Labels']
 
-aff = pd.DataFrame(pd.concat([pd.DataFrame(df_Norm), my_labels], axis=1),
-                        columns = ['clothes', 'kitchen', 'small_appliances', 'toys',
-                                   'house_keeping', 'Labels'])
+aff = pd.DataFrame(pd.concat([pd.DataFrame(temp_df), my_labels], axis=1),
+                        columns = ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation', 'Salary',
+       'CMV', 'Customer_Years','Labels'])
 
-to_revert = aff.groupby(['Labels'])['clothes', 'kitchen', 'small_appliances', 'toys',
-                                   'house_keeping'].mean()
+to_revert = aff.groupby(['Labels'])['Motor', 'Household', 'Health', 'Life', 'Work_Compensation', 'Salary',
+       'CMV', 'Customer_Years'].mean()
 
 final_result = pd.DataFrame(scaler.inverse_transform(X=to_revert),
-                            columns = ['clothes', 'kitchen', 'small_appliances', 'toys',
-                                   'house_keeping',])
+                            columns = ['Motor', 'Household', 'Health', 'Life', 'Work_Compensation', 'Salary',
+       'CMV', 'Customer_Years'])
 
 
-
+"""
 """
 #####################################
 ############# K-means ###############
@@ -411,7 +417,7 @@ plt.title('Elbow Method For Optimal k')
 plt.show()
 
 
-n_clusters = 5
+n_clusters = 4
 
 kmeans = KMeans(n_clusters=n_clusters, 
                 random_state=0,
