@@ -75,7 +75,7 @@ def remove_outliers(df, cols):
 def handle_nans(df, cols):
     """
     Replaces NaNs by column mean.
-    Selected columns must be numerical.
+    Selected columns must be continuous.
     """
     df.fillna(df.mean()[cols], inplace=True)
     return df
