@@ -159,7 +159,8 @@ def handle_cat_nans(df, cols):
     #     return df
     # else:
     #     return df
-    df.fillna(df.mode()[cols], inplace=True)
+    for col in cols:
+        df[col] = df[col].fillna(df[col].mode()[0])
     return df
 
 
@@ -232,7 +233,7 @@ def preprocessing_df(df):
     
     df = handle_nans(df, df.columns.difference(collist))
     df = handle_premium_nans(df, ConsAff)
-    df = handle_cat_nans(df, df.columns)
+    df = handle_cat_nans(df, Cat_Values)
 
     df.loc[:, ["First_Policy", "Birthday", "Salary"]] = df[["First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
 
