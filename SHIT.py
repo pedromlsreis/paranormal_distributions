@@ -351,7 +351,7 @@ dend = shc.dendrogram(shc.linkage(temp_df, method='ward'))
 
 
 
-n_clusters = 5
+n_clusters = 4
 
 cluster = AgglomerativeClustering(n_clusters=n_clusters, affinity='euclidean', linkage='ward')
 cluster.fit_predict(df_Norm)
@@ -363,7 +363,26 @@ plt.show()
 
 # Do the necessary transformations
 
-df
+from sklearn.cluster import AgglomerativeClustering
+
+scaler = StandardScaler()
+
+dfvals = scaler.fit_transform(df_Norm)
+k = 4
+
+Hclustering = AgglomerativeClustering(n_clusters=k,
+                                      affinity='euclidean',
+                                      linkage='ward')
+my_HC = Hclustering.fit(dfvals)
+
+aff = df_Norm.copy()
+aff["Labels"] = pd.DataFrame(my_HC.labels_)
+
+to_revert = aff.groupby(['Labels']).mean()
+final_result = pd.DataFrame(scaler.inverse_transform(X=to_revert),
+                            columns = aff.columns.difference(["Labels"]))
+
+final_result
 
 """
 temp_df = scaler.fit_transform(temp_df)
@@ -425,7 +444,6 @@ kmeans = KMeans(n_clusters=n_clusters,
                 max_iter = 2000).fit(df_Norm)
 
 kmeans_clusters = pd.DataFrame(kmeans.cluster_centers_, columns = df_Norm.columns)
-
 
 
 
@@ -542,10 +560,6 @@ from kmodes.kmodes import KModes
 
 VE_Cat = df_Norm[['Education', 'Area', 'Children']].astype('str')
 
-for j in list(VE_Cat):
-    for i in range(VE_Cat.shape[0]):
-        if VE_Cat.loc[i,j] == '':
-            VE_Cat.loc[i,j] = 'Missing'
 
 km = KModes(n_clusters = 4, init = 'random', n_init = 50, verbose=1)
 
