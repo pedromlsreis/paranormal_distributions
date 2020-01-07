@@ -159,8 +159,7 @@ def handle_cat_nans(df, cols):
     #     return df
     # else:
     #     return df
-    for col in cols:
-        df[col].fillna(df.mode()[cols], inplace=True)
+    df.fillna(df.mean()[cols], inplace=True)
     return df
 
 
