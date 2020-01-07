@@ -185,10 +185,99 @@ plt.show()
 #need to define df_cat with categorical values with no standarisation
 
 from kmodes.kmodes import KModes
-km = KModes(n_clusters=4, init='Huang', n_init=5, verbose=1)
 
-clusters = km.fit_predict(df_cat)
+VE_Cat = df[['Education', 'Area', 'Children']].astype('str')
 
-# get an array of cluster modes
-kmodes = km.cluster_centroids_
-shape = kmodes.shape
+for j in list(VE_Cat):
+    for i in range(VE_Cat.shape[0]):
+        if VE_Cat.loc[i,j] == '':
+            VE_Cat.loc[i,j] = 'Missing'
+
+km = KModes(n_clusters = 4, init = 'random', n_init = 50, verbose=1)
+
+kmode_clusters = km.fit_predict(VE_Cat)
+
+cat_centroids = pd.DataFrame(km.cluster_centroids_,
+                             columns = ['Education', 'Area', 'Children'])
+
+unique, counts = np.unique(km.labels_, return_counts = True)
+
+cat_counts = pd.DataFrame(np.asarray((unique, counts)).T, columns = ['Label', 'Number'])
+
+cat_centroids = pd.concat([cat_centroids, cat_counts], axis = 1)
+
+
+
+"""
+#####################################
+############### SOM #################
+#####################################
+"""
+
+#from sklearn.externals import joblib
+import joblib
+import random
+
+
+
+from sompy.sompy import SOMFactory
+from sompy.visualization.plot_tools import plot_hex_map
+import logging
+
+names = ['clothes', 'kitchen', 'small_appliances', 'toys', 'house_keeping']
+sm = SOMFactory().build(data = X,
+               mapsize=(10,10),
+               normalization = 'var',
+               initialization='random', #'pca'
+               component_names=names,
+               lattice= 'hexa',
+               training = 'seq')#'seq','batch'
+
+sm.train(n_job=4,
+         verbose='info',
+         train_rough_len=30,
+         train_finetune_len=100)
+
+
+final_clusters = pd.DataFrame(sm._data, columns = names)
+
+my_labels = pd.DataFrame(sm._bmu[0])
+    
+final_clusters = pd.concat([final_clusters,my_labels], axis = 1)
+
+final_clusters.columns = [*names, 'Lables']
+
+
+from sompy.visualization.mapview import View2DPacked
+view2D  = View2DPacked(10,10,"", text_size=7)
+view2D.show(sm, col_sz=5, what = 'codebook',)#which_dim="all", denormalize=True)
+plt.show()
+
+
+
+from sompy.visualization.mapview import View2D
+view2D  = View2D(10,10,"", text_size=7)
+view2D.show(sm, col_sz=5, what = 'codebook',)#which_dim="all", denormalize=True)
+plt.show()
+
+
+from sompy.visualization.bmuhits import BmuHitsView
+vhts  = BmuHitsView(12,12,"Hits Map",text_size=7)
+vhts.show(sm, anotate=True, onlyzeros=False, labelsize=10, cmap="autumn", logaritmic=False)
+
+
+
+# K-Means Clustering
+from sompy.visualization.hitmap import HitMapView
+sm.cluster(3)
+hits  = HitMapView(10,10,'Clustering', text_size=7)
+a=hits.show(sm, labelsize=12)
+
+
+
+"""
+#####################################
+########### Mean-Shift ##############
+#####################################
+"""
+

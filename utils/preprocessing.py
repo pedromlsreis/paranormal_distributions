@@ -81,6 +81,14 @@ def handle_nans(df, cols):
     df.fillna(df.mean()[cols], inplace=True)
     return df
 
+def handle_premium_nans(df, cols):
+    """
+    Replaces NaNs with 0.
+    Selected columns must be continuous.
+    """
+    df.fillna(0, inplace=True)
+    return df
+
 
 def handle_cat_nans(df, cols):
     """
@@ -119,8 +127,9 @@ def standardize_data(df, cols):
     """Standardizes data from `cols`.
     cols -> list
     """
-    df[cols] = StandardScaler().fit_transform(df[cols])
-    return df
+    df_Norm = df[cols].copy()
+    df_Norm[cols] = StandardScaler().fit_transform(df[cols])
+    return df, df_Norm
 
 
 def feature_eng(df):
@@ -151,6 +160,25 @@ def dim_reduction(df):
 
 
 def preprocessing_df(df):
+    #seperation of variables
+    ValueEngage = ['Age',
+                   'Education',
+                   'Salary',
+                   'Area',
+                   'Children',
+                   'CMV',
+                   'Claims',
+                   'Customer_Years']
+    
+    ConsAff = ['Motor',
+               'Household',
+               'Health',
+               'Life',
+               'Work_Compensation']
+
+
+
+
     premiums_cols = ["Motor", "Household", "Health", "Life", "Work_Compensation"]
     categorical_cols = ["Area", "Education", "Children"]
     
@@ -163,7 +191,7 @@ def preprocessing_df(df):
     df[categorical_cols] = df[categorical_cols].astype("category")
     
     df = feature_eng(df)
-    df = standardize_data(df, premiums_cols)
+    df, df_Norm = standardize_data(df, premiums_cols)
 
     # df = dim_reduction(df)
     
