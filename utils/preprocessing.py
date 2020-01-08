@@ -212,5 +212,6 @@ def preprocessing_df(df):
     df, df_Norm = standardize_data(df, [*ConsAff, 'Salary', 'CMV', 'Customer_Years'])
 
     # df = dim_reduction(df)
-    
+    df_Norm['Area'], df_Norm['Education'], df_Norm['Children'] = df['Area'], df['Education'], df['Children']
+
     return df, df_Norm

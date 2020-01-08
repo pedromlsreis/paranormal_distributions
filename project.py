@@ -64,17 +64,17 @@ from sklearn.cluster import AgglomerativeClustering
 
 plt.figure(figsize=(10, 7))
 plt.title("Customer Dendograms")
-dend = shc.dendrogram(shc.linkage(df_forClus, method='ward'))
+dend = shc.dendrogram(shc.linkage(df_Norm, method='ward'))
 
 
 
 n_clusters = 4
 
 cluster = AgglomerativeClustering(n_clusters=n_clusters, affinity='euclidean', linkage='ward')
-cluster.fit_predict(df_forClus)
+cluster.fit_predict(df_Norm)
 
 plt.figure(figsize=(10, 7))
-plt.scatter(df_forClus.iloc[:,0], df_forClus.iloc[:,1], c=cluster.labels_, cmap='rainbow')
+plt.scatter(df_Norm.iloc[:,0], df_Norm.iloc[:,1], c=cluster.labels_, cmap='rainbow')
 
 plt.show()
 
@@ -94,7 +94,7 @@ Sum_of_squared_distances = []
 K = range(1,20)
 for k in K:
     km = KMeans(n_clusters=k)
-    km = km.fit(df_forClus)
+    km = km.fit(df_Norm)
     Sum_of_squared_distances.append(km.inertia_)
 
 # Plot the elbow
@@ -110,7 +110,7 @@ n_clusters = 5
 kmeans = KMeans(n_clusters=n_clusters, 
                 random_state=0,
                 n_init = 10,
-                max_iter = 2000).fit(df_forClus)
+                max_iter = 2000).fit(df_Norm)
 
 kmeans_clusters = pd.DataFrame(kmeans.cluster_centers_)
 
@@ -213,7 +213,7 @@ def silplot(X, clusterer, pointlabels=None):
                   "with n_clusters = %d" % n_clusters),
                  fontsize=14, fontweight='bold')
 
-silplot(df_forClus, kmeans)
+silplot(df_Norm, kmeans)
 plt.show()
 
 
@@ -230,10 +230,6 @@ from kmodes.kmodes import KModes
 
 VE_Cat = df[['Education', 'Area', 'Children']].astype('str')
 
-for j in list(VE_Cat):
-    for i in range(VE_Cat.shape[0]):
-        if VE_Cat.loc[i,j] == '':
-            VE_Cat.loc[i,j] = 'Missing'
 
 km = KModes(n_clusters = 4, init = 'random', n_init = 50, verbose=1)
 
@@ -255,8 +251,6 @@ cat_centroids = pd.concat([cat_centroids, cat_counts], axis = 1)
 ############### SOM #################
 #####################################
 """
-
-#from sklearn.externals import joblib
 import joblib
 import random
 
@@ -266,7 +260,16 @@ from sompy.sompy import SOMFactory
 from sompy.visualization.plot_tools import plot_hex_map
 import logging
 
-names = ['clothes', 'kitchen', 'small_appliances', 'toys', 'house_keeping']
+
+temp_df = df_Norm[['Motor', 'Household', 'Health', 'Life', 'Work_Compensation', 'Salary',
+       'CMV', 'Customer_Years']]
+df_Norm.columns
+
+
+X = temp_df.values
+names = temp_df.columns
+
+
 sm = SOMFactory().build(data = X,
                mapsize=(10,10),
                normalization = 'var',
