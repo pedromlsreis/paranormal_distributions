@@ -1,5 +1,13 @@
-pip==19.2.3
-pandas_profiling==2.3.0
-pandas==0.25.1
 numpy==1.16.5
-scikit_learn==0.22
+seaborn==0.9.0
+kmodes==0.10.1
+pip==19.2.3
+matplotlib==3.1.1
+sompy==0.1.1
+pandas==0.25.1
+pandas_profiling==2.3.0
+scipy==1.3.1
+joblib==0.13.2
+dtreeplt==0.1.43
+graphviz==0.13.2
+scikit_learn==0.22.1
