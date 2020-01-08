@@ -30,6 +30,11 @@ To use our program, you just need to run our `project.py` main script, as in:
 python /path/to/project.py
 ```
 
+<b>EDIT:</b>
+To visualize the clusters, please use the Jupyter Notebook.
+Code was supposed to be properly structured, but there was no availability for doing that.
+
+
 ## Credits
 Group N, composed by:
 - Kauser Al Rashid (M20190543)
