@@ -3,7 +3,12 @@
 Group Project for the Data Mining course of the MSc. in Data Science and Advanced Analytics @ NOVA IMS (2019-2020).
 
 
-## Table of Contents
+## Disclaimer
+
+This work is <b>not finished</b>, but this repository contains the as-is status of it.
+Clustering part remained on a notebook, on utils/.
+
+I'm sorry for the inconvenience caused.
 
 
 ## Installation
