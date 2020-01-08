@@ -39,7 +39,7 @@ def run(path=str, profile_after_extract=False, nb_exploration=False):
 
     # data preprocessing
     df, df_Norm = preprocessing_df(df)
-
+    return df, df_Norm
     print(df.head(10))
     
     if nb_exploration:
@@ -47,7 +47,11 @@ def run(path=str, profile_after_extract=False, nb_exploration=False):
 
 
 
+#defining path
+my_path = r'./data/insurance.db'
 
+#obtaining dataframes
+df, df_Norm = run(my_path)
 
 
 

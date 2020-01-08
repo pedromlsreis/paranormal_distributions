@@ -209,7 +209,7 @@ def preprocessing_df(df):
     df.loc[:, Cat_Values] = df[Cat_Values].astype("category")
     
     df = feature_eng(df)
-    df, df_Norm = standardize_data(df, [*ConsAff, 'Salary', 'CMV', 'Customer_Years'])
+    df, df_Norm = standardize_data(df, [*ConsAff, 'Salary', 'CMV', 'Customer_Years', 'Age'])
 
     # df = dim_reduction(df)
     df_Norm['Area'], df_Norm['Education'], df_Norm['Children'] = df['Area'], df['Education'], df['Children']
