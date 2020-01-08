@@ -245,7 +245,7 @@ my_labels = pd.DataFrame(sm._bmu[0])
     
 final_clusters = pd.concat([final_clusters,my_labels], axis = 1)
 
-final_clusters.columns = [*names, 'Lables']
+final_clusters.columns = [*names, 'Labels']
 
 
 from sompy.visualization.mapview import View2DPacked
