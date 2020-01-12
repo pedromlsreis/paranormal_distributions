@@ -106,31 +106,36 @@ def handle_cat_nans(df, cols):
     Uses a Random Forest classifier to predict and impute the nan values 
     for each categorical column given in `cols`.
     """
-    # Xcols = []
+    Xcols, imputated_cols = [], []
 
-    # for cat_col in cols:
-    #     if df[cat_col].isna().any().sum() != 0:
-    #         Xcols.append(cat_col)
+    for cat_col in cols:
+        if df[cat_col].isna().any().sum() > 0:
+            Xcols.append(cat_col)
     
-    # if len(Xcols) != 0:
-    #     for nan_col in Xcols:
-    #         X_train = df.loc[:, df.columns.difference( list(set(Xcols) - set(list(nan_col))) )].values
-    #         y_train = df.loc[:, nan_col].values
-    #         clf = RandomForestClassifier(n_estimators=200, max_depth=5, random_state=2019)
-    #         clf.fit(X_train, y_train)
-    #         X_test = df.loc[df[cat_col].isna(), Xcols].copy()
-    #         y_pred = clf.predict(X_test)
-            
-    #         for pred, index in zip(y_pred, X_test.index.tolist()):
-    #             df.loc[index, cat_col] = pred
+    if len(Xcols) > 0:
+        for nan_col in Xcols:
+            X_train = df.loc[:, df.columns.difference(list(set(Xcols) - set(imputated_cols)))].values
+            y_train = df.loc[:, nan_col].values
 
-    #         print(f'NaN values of "{cat_col}" column were imputed.')
-    #     return df
-    # else:
-    #     return df
-    for col in cols:
-        df[col] = df[col].fillna(df[col].mode()[0])
-    return df
+            # TODO: tune Random Forest
+            clf = RandomForestClassifier(n_estimators=200, max_depth=5, random_state=2019)
+            clf.fit(X_train, y_train)
+
+            X_test = df.loc[df[cat_col].isna(), Xcols].copy()
+            no_of_nans = len(X_test)
+
+            y_pred = clf.predict(X_test)
+            
+            for pred, index in zip(y_pred, X_test.index.tolist()):
+                df.loc[index, cat_col] = pred
+
+            imputated_cols.append(cat_col)
+            print(f'{no_of_nans} NaN values of "{cat_col}" column were imputed.')
+        return df
+    else:
+        return df
+    # for col in cols:
+    #     df[col] = df[col].fillna(df[col].mode()[0])
 
 
 def standardize_data(df, cols):
