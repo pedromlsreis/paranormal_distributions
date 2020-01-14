@@ -218,5 +218,6 @@ def preprocessing_df(df):
     #print(df.head())
     df = feature_selection(df)
     df = feature_eng(df)
+    df, df_Norm = standardize_data(df, [*ConsAff, 'Salary', 'CMV', 'Customer_Years'])
     
-    return df
+    return df, df_Norm
