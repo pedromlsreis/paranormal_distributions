@@ -7,39 +7,6 @@ Created on Tue Jan  7 21:09:05 2020
 """
 
 
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler()
-CA_Norm = scaler.fit_transform(ConsAff)
-
-CA_Norm = pd.DataFrame(CA_Norm, columns = ConsAff.columns)
-
-
-
-
-#K-Means
-#http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html
-from sklearn.cluster import KMeans
-
-
-
-kmeans = KMeans(n_clusters=3, 
-                random_state=0,
-                n_init = 5,
-                max_iter = 200).fit(CA_Norm)
-
-
-my_clusters = kmeans.cluster_centers_
-
-scaler.inverse_transform(X = my_clusters)
-
-my_clusters = pd.DataFrame(scaler.inverse_transform(X = my_clusters),
-                           columns = ConsAff.columns)
-
-
-
-Affinity = pd.DataFrame(pd.concat([ConsAff, pd.DataFrame(kmeans.labels_)],axis=1))
-
-Affinity.columns = ['clothes', 'kitchen', 'small_appliances', 'toys', 'house_keeping', 'Labels']
 
 import numpy as np
 import pandas as pd

@@ -101,11 +101,19 @@ def handle_premium_nans(df, cols):
     return df
 
 
+#def handle_cat_nans(df, cols):
+    """
+    Uses a Random Forest classifier to predict and impute the nan values 
+    for each categorical column given in `cols`.
+    """
+<<<<<<< Updated upstream
+=======
 def handle_cat_nans(df, cols):
     """
     Uses a Random Forest classifier to predict and impute the nan values 
     for each categorical column given in `cols`.
     """
+>>>>>>> Stashed changes
     Xcols = []
 
     for cat_col in cols:
@@ -131,9 +139,15 @@ def handle_cat_nans(df, cols):
         return df
     else:
         return df
+<<<<<<< Updated upstream
     # for col in cols:
     #     df[col] = df[col].fillna(df[col].mode()[0])
     # return df
+=======
+    for col in cols:
+        df[col] = df[col].fillna(df[col].mode()[0])
+    return df
+>>>>>>> Stashed changes
     
     
 
