@@ -106,6 +106,7 @@ def handle_cat_nans(df, cols):
     Uses a Random Forest classifier to predict and impute the nan values 
     for each categorical column given in `cols`.
     """
+    """
     Xcols, imputated_cols = [], []
 
     for cat_col in cols:
@@ -134,9 +135,12 @@ def handle_cat_nans(df, cols):
         return df
     else:
         return df
-    # for col in cols:
-    #     df[col] = df[col].fillna(df[col].mode()[0])
-
+    """
+    for col in cols:
+        df[col] = df[col].fillna(df[col].mode()[0])
+    return df
+    
+    
 
 def standardize_data(df, cols):
     """Standardizes data from `cols`.
@@ -162,6 +166,7 @@ def feature_selection(df):
     h_map.set_ylim(bottom + 0.5, top - 0.5)
 
     plt.show()
+    return df
 
 
 def feature_eng(df):
@@ -175,6 +180,9 @@ def feature_eng(df):
     if "First_Policy" in df.columns:
         df["Customer_Years"] = 2016 - df["First_Policy"]
         del df["First_Policy"]
+    
+    if 'Claims' in df.columns:    
+        del df['Claims']
     
     return df
 
@@ -212,11 +220,8 @@ def preprocessing_df(df):
     df.loc[:, ["First_Policy", "Birthday", "Salary"]] = df[["First_Policy", "Birthday", "Salary"]].round().astype(np.int32)
 
     df.loc[:, Cat_Values] = df[Cat_Values].astype("category")
-    
+    #print(df.head())
+    df = feature_selection(df)
     df = feature_eng(df)
-    df, df_Norm = standardize_data(df, [*ConsAff, 'Salary', 'CMV', 'Customer_Years', 'Age'])
-
-    # df = dim_reduction(df)
-    df_Norm['Area'], df_Norm['Education'], df_Norm['Children'] = df['Area'], df['Education'], df['Children']
-
-    return df, df_Norm
+    
+    return df

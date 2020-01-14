@@ -48,12 +48,14 @@ def run(path=str, profile_after_extract=False, nb_exploration=False):
 
 
 #defining path
-my_path = r'./data/insurance.db'
+#my_path = r'./data/insurance.db'
 
 #obtaining dataframes
-df, df_Norm = run(my_path)
+#df, df_Norm = run(my_path)
 
 
+
+print(df.isna().any)
 
 """
 #####################################
@@ -329,4 +331,6 @@ a=hits.show(sm, labelsize=12)
 my_path = r'./data/insurance.db'
 
 if __name__ == "__main__":
-    run(path=my_path)
+    #run(path=my_path)
+    df, df_Norm = run(my_path)
+
