@@ -106,8 +106,7 @@ def handle_cat_nans(df, cols):
     Uses a Random Forest classifier to predict and impute the nan values 
     for each categorical column given in `cols`.
     """
-    """
-    Xcols, imputated_cols = [], []
+    Xcols = []
 
     for cat_col in cols:
         if df[cat_col].isna().any().sum() > 0:
@@ -115,30 +114,26 @@ def handle_cat_nans(df, cols):
     
     if len(Xcols) > 0:
         for nan_col in Xcols:
-            X_train = df.loc[:, df.columns.difference(list(set(Xcols) - set(imputated_cols)))].values
-            y_train = df.loc[:, nan_col].values
+            X_train = df.loc[df[df[nan_col].notnull()].index, df.columns.difference(Xcols)].values
+            y_train = df.loc[df[df[nan_col].notnull()].index, nan_col].values
 
             # TODO: tune Random Forest
             clf = RandomForestClassifier(n_estimators=200, max_depth=5, random_state=2019)
             clf.fit(X_train, y_train)
 
-            X_test = df.loc[df[cat_col].isna(), Xcols].copy()
-            no_of_nans = len(X_test)
-
+            X_test = df.loc[df[df[nan_col].isna()].index, df.columns.difference(Xcols)]
             y_pred = clf.predict(X_test)
             
             for pred, index in zip(y_pred, X_test.index.tolist()):
                 df.loc[index, cat_col] = pred
 
-            imputated_cols.append(cat_col)
-            print(f'{no_of_nans} NaN values of "{cat_col}" column were imputed.')
+            print(f'NaN values of "{cat_col}" column were imputed.')
         return df
     else:
         return df
-    """
-    for col in cols:
-        df[col] = df[col].fillna(df[col].mode()[0])
-    return df
+    # for col in cols:
+    #     df[col] = df[col].fillna(df[col].mode()[0])
+    # return df
     
     
 
