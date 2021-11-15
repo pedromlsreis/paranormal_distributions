@@ -1,7 +1,7 @@
 numpy==1.16.5
 seaborn==0.9.0
 kmodes==0.10.1
-pip==19.2.3
+pip==21.1
 matplotlib==3.1.1
 sompy==0.1.1
 pandas==0.25.1
